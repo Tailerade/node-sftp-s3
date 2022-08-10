@@ -7,8 +7,8 @@ class S3Stub {
     this.Bucket = params.Bucket;
     this.config = {
       params: {
-        Bucket: this.Bucket
-      }
+        Bucket: this.Bucket,
+      },
     };
     this.objects = {};
     this.uploadId = 1;
@@ -17,18 +17,18 @@ class S3Stub {
 
   listObjects(params, cb) {
     var prefix = '';
-    if(params.Prefix) {
+    if (params.Prefix) {
       prefix = params.Prefix;
     }
 
     var results = [];
 
     _.forOwn(this.objects, (v, k) => {
-      if(k.startsWith(prefix)) {
+      if (k.startsWith(prefix)) {
         results.push({
           Key: k,
           Size: v.size,
-          LastModified: v.LastModified
+          LastModified: v.LastModified,
         });
       }
     });
@@ -37,13 +37,12 @@ class S3Stub {
   }
 
   createMultipartUpload(params, cb) {
-    if(this.multipart)
-      return process.nextTick(() => cb(new Error('Already in process of multipart upload')));
+    if (this.multipart) return process.nextTick(() => cb(new Error('Already in process of multipart upload')));
     var key = params.Key;
     this.multipart = {
       key: key,
       parts: [],
-      uploadId: this.uploadId++
+      uploadId: this.uploadId++,
     };
     process.nextTick(() => cb(null, { UploadId: this.multipart.uploadId }));
   }
@@ -51,14 +50,13 @@ class S3Stub {
   copyObject(params, cb) {
     var key = params.Key;
     var src = params.CopySource;
-    var obj = _.find(this.objects, (v, k) => (this.Bucket + '/' + k) === src);
-    if(!obj)
-      return process.nextTick(() => cb(new Error('Not found')));
-    
+    var obj = _.find(this.objects, (v, k) => this.Bucket + '/' + k === src);
+    if (!obj) return process.nextTick(() => cb(new Error('Not found')));
+
     this.objects[key] = {
       data: new Buffer(obj.data),
       size: obj.size,
-      LastModified: new Date()
+      LastModified: new Date(),
     };
     process.nextTick(() => cb(null, {}));
   }
@@ -67,8 +65,7 @@ class S3Stub {
     var keys = params.Delete.Objects;
     for (var index = 0; index < keys.length; index++) {
       var k = keys[index].Key;
-      if(!this.objects[k])
-        return process.nextTick(() => cb(new Error('Not found')));
+      if (!this.objects[k]) return process.nextTick(() => cb(new Error('Not found')));
       delete this.objects[k];
     }
 
@@ -76,8 +73,7 @@ class S3Stub {
   }
 
   deleteObject(params, cb) {
-    if(!this.objects[params.Key])
-      return process.nextTick(() => cb(new Error('Not found')));
+    if (!this.objects[params.Key]) return process.nextTick(() => cb(new Error('Not found')));
     delete this.objects[params.Key];
     process.nextTick(() => cb(null, {}));
   }
@@ -87,11 +83,10 @@ class S3Stub {
     var range = params.Range;
 
     var obj = _.find(this.objects, (v, k) => k === key);
-    if(!obj)
-      return process.nextTick(() => cb(new Error('Not found')));
-    
+    if (!obj) return process.nextTick(() => cb(new Error('Not found')));
+
     var data = obj.data;
-    if(range) {
+    if (range) {
       var r = Range.prototype.parse(range)._ranges[0]._range;
       data = data.slice(r[0], r[1] + 1);
     }
@@ -105,9 +100,9 @@ class S3Stub {
     var uploadId = params.UploadId;
     var body = params.Body;
 
-    if(!this.multipart || this.multipart.key !== key || this.multipart.uploadId !== uploadId)
-      return process.nextTick(() => cb(new Error("Invalid upload key")));
-    
+    if (!this.multipart || this.multipart.key !== key || this.multipart.uploadId !== uploadId)
+      return process.nextTick(() => cb(new Error('Invalid upload key')));
+
     var etag = `abc${this.inc++}`;
 
     this.multipart.parts[partNum] = { body: body, etag: etag };
@@ -115,9 +110,8 @@ class S3Stub {
   }
 
   abortMultipartUpload(params, cb) {
-    if(!this.multipart)
-      return process.nextTick(() => cb(new Error('No ongoing upload')));
-    
+    if (!this.multipart) return process.nextTick(() => cb(new Error('No ongoing upload')));
+
     this.multipart = null;
     process.nextTick(() => cb(null, {}));
   }
@@ -127,19 +121,18 @@ class S3Stub {
     var uploadId = params.UploadId;
     var parts = params.MultipartUpload.Parts;
 
-    if(!this.multipart)
-      return process.nextTick(() => cb(new Error('No ongoing upload')));
-    
+    if (!this.multipart) return process.nextTick(() => cb(new Error('No ongoing upload')));
+
     var data = new Buffer(0);
     parts.forEach((v) => {
       var p = v.PartNumber;
-      data = Buffer.concat([data, this.multipart.parts[p-1].body]);
+      data = Buffer.concat([data, this.multipart.parts[p - 1].body]);
     });
 
     this.objects[key] = {
       data: data,
       size: data.length,
-      LastModified: new Date()
+      LastModified: new Date(),
     };
     this.multipart = null;
     process.nextTick(() => cb(null, {}));
@@ -164,7 +157,6 @@ class S3Stub {
     this.objects[key] = { data: new Buffer(body), size: body.length, LastModified: new Date() };
     process.nextTick(() => cb(null, {}));
   }
-
 }
 
 module.exports = S3Stub;

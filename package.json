@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/nyc ./node_modules/mocha/bin/mocha --recursive",
+    "prettier": "prettier --write '**/*.js'",
     "coverage": "./node_modules/.bin/nyc report --reporter=text-lcov | node ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
@@ -32,12 +33,18 @@
   "devDependencies": {
     "chai": "^4.3.6",
     "coveralls": "^3.1.1",
+    "http-range": "^1.0.0",
     "istanbul": "^0.4.5",
     "lodash": "^4.17.21",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
-    "http-range": "^1.0.0",
+    "prettier": "^2.7.1",
     "sinon": "^14.0.0",
     "sinon-chai": "3.7.0"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "tabWidth": 2,
+    "singleQuote": true
   }
 }

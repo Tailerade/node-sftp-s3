@@ -13,8 +13,7 @@ var Client = require('ssh2').Client;
 
 var expect = chai.expect;
 
-describe("SFTP", function() {
-
+describe('SFTP', function () {
   var s3Instance = new S3Stub({ Bucket: 'test' });
   var server;
 
@@ -26,58 +25,58 @@ describe("SFTP", function() {
     server.stop(() => done());
   });
 
-  it("Should Authenticate User", function(done) {
+  it('Should Authenticate User', function (done) {
     var loginSpy = getEventSpy(server, 'login');
     server.addHostKey(fs.readFileSync(path.join(__dirname, 'keys/server_key_rsa')));
     server.addPublicKey(fs.readFileSync(path.join(__dirname, 'keys/id_rsa.pub')), 'foo');
     server.listen(2222, '127.0.0.1', () => {
       var conn = new Client();
-      conn.on('ready', () => {
-        conn.sftp((err, sftp) => {
-          conn.end();
-          if(err)
-            return done(err);
-          expect(loginSpy).to.have.been.called;
-          done();
+      conn
+        .on('ready', () => {
+          conn.sftp((err, sftp) => {
+            conn.end();
+            if (err) return done(err);
+            expect(loginSpy).to.have.been.called;
+            done();
+          });
+        })
+        .on('error', (err) => {
+          done(err);
+        })
+        .connect({
+          host: '127.0.0.1',
+          port: 2222,
+          username: 'foo',
+          privateKey: fs.readFileSync(path.join(__dirname, 'keys/id_rsa')),
         });
-      })
-      .on('error', (err) => {
-        done(err);
-      })
-      .connect({
-        host: '127.0.0.1',
-        port: 2222,
-        username: 'foo',
-        privateKey: fs.readFileSync(path.join(__dirname, 'keys/id_rsa'))
-      });
-
     });
   });
 
-  it("Should Failed to Authenticate User", function(done) {
+  it('Should Failed to Authenticate User', function (done) {
     server.addHostKey(fs.readFileSync(path.join(__dirname, 'keys/server_key_rsa')));
     server.addPublicKey(fs.readFileSync(path.join(__dirname, 'keys/id_rsa.pub')), 'foo');
     server.listen(2222, '127.0.0.1', () => {
       var conn = new Client();
-      conn.on('ready', () => {
-        conn.sftp((err, sftp) => {
-          conn.end();
-          done(new Error('Incorrectly logged user in'));
+      conn
+        .on('ready', () => {
+          conn.sftp((err, sftp) => {
+            conn.end();
+            done(new Error('Incorrectly logged user in'));
+          });
+        })
+        .on('error', () => {
+          done();
+        })
+        .connect({
+          host: '127.0.0.1',
+          port: 2222,
+          username: 'bar',
+          privateKey: fs.readFileSync(path.join(__dirname, 'keys/id_rsa')),
         });
-      })
-      .on('error', () => {
-        done();
-      })
-      .connect({
-        host: '127.0.0.1',
-        port: 2222,
-        username: 'bar',
-        privateKey: fs.readFileSync(path.join(__dirname, 'keys/id_rsa'))
-      });
     });
   });
 
-  it("Should Write and Read and Delete Correctly", function(done) {
+  it('Should Write and Read and Delete Correctly', function (done) {
     this.timeout(10000);
     var uploadedSpy = getEventSpy(server, 'file-uploaded');
     var downloadedSpy = getEventSpy(server, 'file-downloaded');
@@ -103,7 +102,6 @@ describe("SFTP", function() {
               readTest();
             }, 50);
           });
-
         });
       }
 
@@ -115,10 +113,9 @@ describe("SFTP", function() {
             done(err);
           });
           var result = '';
-          stream.on('data', (d) => result += d);
+          stream.on('data', (d) => (result += d));
           stream.on('end', (d) => {
-            if(d)
-              result += d;
+            if (d) result += d;
 
             conn.end();
             expect(result).to.equal('bc');
@@ -148,9 +145,8 @@ describe("SFTP", function() {
         execClientSFTP('bar', 'keys/id_rsa2', server, done, (conn, sftp) => {
           sftp.readdir('/', (err, lst) => {
             conn.end();
-            if(err)
-              return done(err);
-            
+            if (err) return done(err);
+
             expect(lst.length).to.equal(0);
             deleteFile();
           });
@@ -161,8 +157,7 @@ describe("SFTP", function() {
         execClientSFTP('foo', 'keys/id_rsa', server, done, (conn, sftp) => {
           sftp.unlink('/test.txt', (err) => {
             conn.end();
-            if(err)
-              return done(err);
+            if (err) return done(err);
             setTimeout(() => {
               expect(deletedSpy).to.have.been.calledOnce;
               done();
@@ -170,11 +165,10 @@ describe("SFTP", function() {
           });
         });
       }
-
     });
   });
 
-  it("Create and Remove Directory", function(done) {
+  it('Create and Remove Directory', function (done) {
     var createDirSpy = getEventSpy(server, 'directory-created');
     var deleteDirSpy = getEventSpy(server, 'directory-deleted');
     server.addHostKey(fs.readFileSync(path.join(__dirname, 'keys/server_key_rsa')));
@@ -188,8 +182,7 @@ describe("SFTP", function() {
         execClientSFTP('foo', 'keys/id_rsa', server, done, (conn, sftp) => {
           sftp.mkdir('/somedir', (err) => {
             conn.end();
-            if(err)
-              return done(err);
+            if (err) return done(err);
             setTimeout(() => {
               expect(createDirSpy).to.have.been.calledOnce;
               removeDir();
@@ -202,8 +195,7 @@ describe("SFTP", function() {
         execClientSFTP('foo', 'keys/id_rsa', server, done, (conn, sftp) => {
           sftp.rmdir('/somedir', (err) => {
             conn.end();
-            if(err)
-              return done(err);
+            if (err) return done(err);
             setTimeout(() => {
               expect(deleteDirSpy).to.have.been.calledOnce;
               done();
@@ -214,7 +206,7 @@ describe("SFTP", function() {
     });
   });
 
-  it("Rename File", function(done) {
+  it('Rename File', function (done) {
     var renameSpy = getEventSpy(server, 'file-renamed');
     server.addHostKey(fs.readFileSync(path.join(__dirname, 'keys/server_key_rsa')));
     server.addPublicKey(fs.readFileSync(path.join(__dirname, 'keys/id_rsa.pub')), 'foo');
@@ -241,8 +233,7 @@ describe("SFTP", function() {
         execClientSFTP('foo', 'keys/id_rsa', server, done, (conn, sftp) => {
           sftp.rename('/test.txt', '/abc.txt', (err) => {
             conn.end();
-            if(err)
-              return done(err);
+            if (err) return done(err);
             setTimeout(() => {
               expect(renameSpy).to.have.been.calledOnce;
               ensureRenamed();
@@ -255,9 +246,8 @@ describe("SFTP", function() {
         execClientSFTP('foo', 'keys/id_rsa', server, done, (conn, sftp) => {
           sftp.readdir('/', (err, lst) => {
             conn.end();
-            if(err)
-              return done(err);
-            
+            if (err) return done(err);
+
             expect(lst.length).to.equal(1);
             expect(lst[0].filename).to.equal('abc.txt');
             done();
@@ -269,20 +259,21 @@ describe("SFTP", function() {
 
   function execClientSFTP(username, key, server, done, fn) {
     var conn = new Client();
-    conn.on('ready', () => {
-      conn.sftp((err, sftp) => {
-        fn(conn, sftp);
+    conn
+      .on('ready', () => {
+        conn.sftp((err, sftp) => {
+          fn(conn, sftp);
+        });
+      })
+      .on('error', (err) => {
+        done(err);
+      })
+      .connect({
+        host: '127.0.0.1',
+        port: 2222,
+        username: username,
+        privateKey: fs.readFileSync(path.join(__dirname, key)),
       });
-    })
-    .on('error', (err) => {
-      done(err);
-    })
-    .connect({
-      host: '127.0.0.1',
-      port: 2222,
-      username: username,
-      privateKey: fs.readFileSync(path.join(__dirname, key))
-    });
   }
 
   function getEventSpy(obj, event) {
