@@ -25,6 +25,7 @@
   "homepage": "https://github.com/codyrigney92/node-sftp-s3#readme",
   "dependencies": {
     "aws-sdk": "^2.1191.0",
+    "bcrypt": "^5.0.1",
     "buffer-equal-constant-time": "^1.0.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

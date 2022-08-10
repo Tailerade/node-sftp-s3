@@ -36,7 +36,30 @@ server.on('authentication-publickey', ({ username, tryPublicKey }) => {
       setTimeout(
         () =>
           resolve({
+            username: 'hans',
             key: ssh2.utils.parseKey(fs.readFileSync(path.join(__dirname, 'keys/id_rsa.pub'))),
+            path: 'hans',
+          }),
+        500
+      )
+    )
+  );
+});
+
+// Dynamically provide password hashes
+server.on('authentication-password', ({ username, resolve }) => {
+  if (username !== 'paul') {
+    return;
+  }
+
+  resolve(
+    new Promise((resolve) =>
+      setTimeout(
+        () =>
+          resolve({
+            username: 'paul',
+            // password: testchen
+            passwordHash: '$2b$12$ChfvCAp.pwcx.ez3PjvKu./Gr0JH0q5HPlFpbbyEPARqGGzTWsaMC',
             path: 'hans',
           }),
         500
