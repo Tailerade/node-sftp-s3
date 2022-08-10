@@ -47,12 +47,12 @@ server.on('authentication-publickey', ({ username, tryPublicKey }) => {
 });
 
 // Dynamically provide password hashes
-server.on('authentication-password', ({ username, resolve }) => {
+server.on('authentication-password', ({ username, tryUserPassword }) => {
   if (username !== 'paul') {
     return;
   }
 
-  resolve(
+  tryUserPassword(
     new Promise((resolve) =>
       setTimeout(
         () =>
