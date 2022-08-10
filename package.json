@@ -23,21 +23,21 @@
   },
   "homepage": "https://github.com/codyrigney92/node-sftp-s3#readme",
   "dependencies": {
-    "aws-sdk": "^2.4.12",
+    "aws-sdk": "^2.1191.0",
     "buffer-equal-constant-time": "^1.0.1",
-    "lodash": "^4.14.1",
-    "moment": "^2.14.1",
-    "ssh2": "^0.6.1"
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "ssh2": "^1.11.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "coveralls": "^2.13.0",
+    "chai": "^4.3.6",
+    "coveralls": "^3.1.1",
     "istanbul": "^0.4.5",
-    "lodash": "^4.14.1",
-    "mocha": "^3.0.2",
-    "nyc": "^10.2.0",
+    "lodash": "^4.17.21",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
     "http-range": "^1.0.0",
-    "sinon": "^1.17.5",
-    "sinon-chai": "2.8.0"
+    "sinon": "^14.0.0",
+    "sinon-chai": "3.7.0"
   }
 }
