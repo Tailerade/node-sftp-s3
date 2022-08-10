@@ -25,6 +25,8 @@ server.addHostKey(fs.readFileSync(path.join(__dirname, 'keys/server_key_rsa')));
 //Add users' keys
 server.addPublicKey(fs.readFileSync(path.join(__dirname, 'keys/id_rsa.pub')), 'someuser', 'uploads');
 
+server.on('client-error', ({ error }) => console.log('got error', error));
+
 server.listen(sftpPort, '127.0.0.1', function (port) {
   console.log('Listening on ' + port);
 });
