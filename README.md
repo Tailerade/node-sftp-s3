@@ -1,15 +1,20 @@
 # node-sftp-s3
+
 [![CircleCI](https://circleci.com/gh/cmrigney/node-sftp-s3.svg?style=svg)](https://circleci.com/gh/cmrigney/node-sftp-s3)
 
 [![Coverage Status](https://coveralls.io/repos/github/cmrigney/node-sftp-s3/badge.svg?branch=master)](https://coveralls.io/github/cmrigney/node-sftp-s3?branch=master)
 
-**UPDATE: I'm no longer maintaining this project. If you would like to take it over or you know of a solid fork, please reach out!**
+**This is a fork of [cmrigney/node-sftp-s3](https://github.com/cmrigney/node-sftp-s3) which is no longer maintained.**
+It has its dependencies updated as well as support for dynamically loaded authentication data (e.g. from a database),
+supporting both ssh public keys and bcrypt password hashes.
 
-Node JS module for creating an SFTP server with user isolation that uses S3 for file storage.
+Node JS module for creating a SFTP server with user isolation that uses S3 for file storage.
 
 ## Install
 
-`npm install node-sftp-s3`
+This fork is not currently available from NPM. Hence you need to install via GIT:
+
+`npm install git+https://github.com/Tailerade/node-sftp-s3.git`
 
 ## Usage
 
@@ -43,29 +48,15 @@ server.listen(2222, '127.0.0.1', function(port) {
 
 ## Events
 
-SFTPServer emits several events.  Each event passes a dictionary object with the listed parameters.
+SFTPServer emits several events. Each event passes a dictionary object with the listed parameters.
 
 The path parameter includes the user's subfolder name.
 
- * **client-error** - `{ client: <Object>, error: <Error> }`
- * **login** - `{ username: <string> }`
- * **file-uploaded** - `{ path: <string>, username: <string> }`
- * **file-downloaded** - `{ path: <string>, username: <string> }`
- * **file-deleted** - `{ path: <string>, username: <string> }`
- * **directory-deleted** - `{ path: <string>, username: <string> }`
- * **directory-created** - `{ path: <string>, username: <string> }`
- * **file-renamed** - `{ path: <string>, oldPath: <string>, username: <string> }`
-
-## Notes
-
-Password authentication is NOT currently supported.  Only public/private key auth. It should be simple to add this feature.  A PR is welcome. :)
-
-### Docker
-
-The module also includes a server suitable for running in a Docker container.
-
-1. `cp .env.sample .env`
-2. Edit `.env` to add appropriate configuration values for all variables
-3. `mkdir keys && ssh-keygen -t rsa -f keys/server_key_rsa`
-4. For each user, `ssh-keygen -t rsa -f keys/id_<username>`
-5. `docker-compose up`
+- **client-error** - `{ client: <Object>, error: <Error> }`
+- **login** - `{ username: <string> }`
+- **file-uploaded** - `{ path: <string>, username: <string> }`
+- **file-downloaded** - `{ path: <string>, username: <string> }`
+- **file-deleted** - `{ path: <string>, username: <string> }`
+- **directory-deleted** - `{ path: <string>, username: <string> }`
+- **directory-created** - `{ path: <string>, username: <string> }`
+- **file-renamed** - `{ path: <string>, oldPath: <string>, username: <string> }`
