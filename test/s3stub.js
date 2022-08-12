@@ -1,6 +1,8 @@
 'use strict';
-var _ = require('lodash');
-var Range = require('http-range').Range;
+
+const _ = require('lodash');
+const Range = require('http-range').Range;
+const { Readable } = require('stream');
 
 class S3Stub {
   constructor(params) {
@@ -91,7 +93,9 @@ class S3Stub {
       data = data.slice(r[0], r[1] + 1);
     }
 
-    process.nextTick(() => cb(null, { Body: data, Size: data.length, LastModified: obj.LastModified }));
+    return {
+      createReadStream: () => Readable.from(data),
+    };
   }
 
   uploadPart(params, cb) {

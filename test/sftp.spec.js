@@ -96,8 +96,8 @@ describe('SFTP', function () {
             done(err);
           });
           stream.end('abc', 'utf8', () => {
-            conn.end();
             setTimeout(() => {
+              conn.end();
               expect(uploadedSpy).to.have.been.calledOnce;
               readTest();
             }, 50);
@@ -223,8 +223,10 @@ describe('SFTP', function () {
             done(err);
           });
           stream.end('abc', 'utf8', () => {
-            conn.end();
-            rename();
+            setTimeout(() => {
+              conn.end();
+              rename();
+            }, 0);
           });
         });
       }
