@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/codyrigney92/node-sftp-s3.git"
+    "url": "git+https://github.com/Tailerade/node-sftp-s3.git"
   },
   "keywords": [
     "s3",
@@ -17,11 +17,17 @@
     "sftp"
   ],
   "author": "Cody Rigney",
+  "contributors": [
+    {
+      "name": "Stefan Siegl",
+      "email": "stefan.siegl@tailerade.com"
+    }
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/codyrigney92/node-sftp-s3/issues"
+    "url": "https://github.com/Tailerade/node-sftp-s3/issues"
   },
-  "homepage": "https://github.com/codyrigney92/node-sftp-s3#readme",
+  "homepage": "https://github.com/Tailerade/node-sftp-s3#readme",
   "dependencies": {
     "aws-sdk": "^2.1191.0",
     "bcrypt": "^5.0.1",
