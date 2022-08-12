@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/Tailerade/node-sftp-s3#readme",
   "dependencies": {
+    "async-mutex": "^0.3.2",
     "aws-sdk": "^2.1191.0",
     "bcrypt": "^5.0.1",
     "buffer-equal-constant-time": "^1.0.1",
