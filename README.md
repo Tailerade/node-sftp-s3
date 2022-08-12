@@ -1,10 +1,6 @@
 # node-sftp-s3
 
-[![CircleCI](https://circleci.com/gh/cmrigney/node-sftp-s3.svg?style=svg)](https://circleci.com/gh/cmrigney/node-sftp-s3)
-
-[![Coverage Status](https://coveralls.io/repos/github/cmrigney/node-sftp-s3/badge.svg?branch=master)](https://coveralls.io/github/cmrigney/node-sftp-s3?branch=master)
-
-**This is a fork of [cmrigney/node-sftp-s3](https://github.com/cmrigney/node-sftp-s3) which is no longer maintained.**
+**This is a fork of [cmrigney/node-sftp-s3](https://github.com/cmrigney/node-sftp-s3) (which is no longer maintained).**  
 It has its dependencies updated as well as support for dynamically loaded authentication data (e.g. from a database),
 supporting both ssh public keys and bcrypt password hashes.
 
@@ -42,8 +38,6 @@ server.listen(2222, '127.0.0.1', function(port) {
   console.log('Listening on ' + port);
   //server.stop() will stop the server
 });
-
-
 ```
 
 ## Events

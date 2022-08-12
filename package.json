@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc mocha --recursive",
-    "prettier": "prettier --write '**/*.js'",
-    "coverage": "./node_modules/.bin/nyc report --reporter=text-lcov | node ./node_modules/coveralls/bin/coveralls.js"
+    "prettier": "prettier --write '**/*.js'"
   },
   "repository": {
     "type": "git",
@@ -33,7 +32,6 @@
   },
   "devDependencies": {
     "chai": "^4.3.6",
-    "coveralls": "^3.1.1",
     "http-range": "^1.0.0",
     "istanbul": "^0.4.5",
     "lodash": "^4.17.21",
