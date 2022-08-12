@@ -14,29 +14,29 @@ This fork is not currently available from NPM. Hence you need to install via GIT
 
 ## Usage
 
-```
-var SFTPS3Server = require('node-sftp-s3').SFTPS3Server;
+```js
+const SFTPS3Server = require('node-sftp-s3').SFTPS3Server;
 
-var AWS = require('aws-sdk');
-var path = require('path');
-var fs = require('fs');
+const AWS = require('aws-sdk');
+const path = require('path');
+const fs = require('fs');
 
-//aws.json contains credentials for S3 access
+// aws.json contains credentials for S3 access
 AWS.config.loadFromPath(path.join(__dirname, 'aws.json'));
 
-var s3 = new AWS.S3({ params: { Bucket: 'testing' } });
+const s3 = new AWS.S3({ params: { Bucket: 'testing' } });
 
-var server = new SFTPS3Server(s3);
+const server = new SFTPS3Server(s3);
 
-//You can generate a key with ssh-keygen
+// You can generate a key with "ssh-keygen -m pem -f server_key_rsa"
 server.addHostKey(fs.readFileSync(path.join(__dirname, 'server_key_rsa')));
 
-//Add users' public keys.  These can also be added after the server has already started
+// Add users' public keys.  These can also be added after the server has already started
 server.addPublicKey(fs.readFileSync(path.join(__dirname, 'client_key_rsa.pub')), 'baruser' /* , 'myapp' (optional path prefix) */);
 
 server.listen(2222, '127.0.0.1', function(port) {
   console.log('Listening on ' + port);
-  //server.stop() will stop the server
+  // server.stop() will stop the server
 });
 ```
 
