@@ -4,7 +4,7 @@
   "description": "Node JS module for creating an SFTP server with user isolation that uses S3 for file storage.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/nyc ./node_modules/mocha/bin/mocha --recursive",
+    "test": "nyc mocha --recursive",
     "prettier": "prettier --write '**/*.js'",
     "coverage": "./node_modules/.bin/nyc report --reporter=text-lcov | node ./node_modules/coveralls/bin/coveralls.js"
   },
